@@ -1,34 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { exerciseOptions, fetchData } from '../utils/fetchData';
-import HorizontalScrollbar from './HorizontalScrollbar';
+import React, { useEffect, useState } from "react";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { exerciseOptions, fetchData } from "../utils/fetchData";
+import HorizontalScrollbar from "./HorizontalScrollbar";
 
 const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [bodyParts, setBodyParts] = useState([]);
 
   useEffect(() => {
     const fetchExercisesData = async () => {
-      const bodyPartsData = await fetchData('https://exercisedb.p.rapidapi.com/exercises/bodyPartList', exerciseOptions);
-      // {bodyPartsData.toUpperCase};
-      setBodyParts(['all', ...bodyPartsData]);
-    };
+      const bodyPartsData = await fetchData(
+        "https://exercisedb.p.rapidapi.com/exercises/bodyPartList",
+        exerciseOptions
+      );
+      setBodyParts(["all", ...bodyPartsData]);
+    }
     fetchExercisesData();
   }, []);
 
+  // handleSearch method
   const handleSearch = async () => {
     if (search) {
-      const exercisesData = await fetchData('https://exercisedb.p.rapidapi.com/exercises', exerciseOptions);
-      console.log(exercisesData);
-
-      const searchedExercises = exercisesData.filter(
-        (item) => item.name.toLowerCase().includes(search)
-          || item.target.toLowerCase().includes(search)
-          || item.equipment.toLowerCase().includes(search)
-          || item.bodyPart.toLowerCase().includes(search),
+      const exercisesData = await fetchData(
+        "https://exercisedb.p.rapidapi.com/exercises?limit=1327",
+        exerciseOptions
       );
 
-      // window.scrollTo({ top: 1800, left: 100, behavior: 'smooth' });
+      const searchedExercises = exercisesData.filter(
+        (exercise) =>
+          exercise.name.toLowerCase().includes(search) ||
+          exercise.target.toLowerCase().includes(search) ||
+          exercise.equipment.toLowerCase().includes(search) ||
+          exercise.bodyPart.toLowerCase().includes(search)
+      );
+
+      window.scrollTo({ top: 1800, left: 100, behavior: 'smooth' });
 
       setSearch('');
       setExercises(searchedExercises);
@@ -37,30 +43,37 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
 
   return (
     <>
-      <div className="my-10 flex flex-col items-center">
-        <p className="text-3xl font-semibold pb-4">
-          Awesome Exercises You <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Should Know
-        </p>
-        <p>
+      <div className="flex flex-col items-center justify-center mt-[37px] p-[20px]">
+        <h1 className="font-bold text-center mb-[49px] text-[30px] lg:text-[44px]">
+          Awesome Exercises You <br /> Should Know
+        </h1>
+
+        <div className="relative mb-[72px]">
           <input
-            type="text"
+            className="py-3 px-4 w-[45rem] text-md outline-none border-l-[1px] border-t-[1px] border-b-[1px] text-left rounded-l-md"
+            value={search}
+            onChange={(e) => setSearch(e.target.value.toLowerCase())}
             placeholder="Search Exercises"
-            className="py-2 px-4 w-[45rem] text-md outline-none border-l-[1px] border-t-[1px] border-b-[1px] text-left rounded-l-md"
+            type="text"
           />
-          <button className="bg-[#e93232] px-12 py-2 text-md border-r-2 border-t-2 border-b-2 text-white font-bold rounded-r-md ">
+          <button
+            className="bg-[#e93232] px-12 py-3 text-md border-r-2 border-t-2 border-b-2 text-white font-bold rounded-r-md"
+            onClick={handleSearch}
+          >
             Search
           </button>
-        </p>
+        </div>
+
+        <div className="relative w-full p-[20px]">
+          <HorizontalScrollbar 
+            data={bodyParts}
+            bodyPart={bodyPart}
+            setBodyPart={setBodyPart}
+          />
+        </div>
       </div>
-      <Box sx={{ position: "relative", width: "100%", p: "20px" }}>
-        <HorizontalScrollbar
-          data={bodyParts}
-          bodyPart={bodyPart}
-          setBodyPart={setBodyPart}
-        />
-      </Box>
     </>
+
     // <Stack alignItems="center" mt="37px" justifyContent="center" p="20px">
     //   <Typography fontWeight={700} sx={{ fontSize: { lg: '44px', xs: '30px' } }} mb="49 px" textAlign="center">
     //     Awesome Exercises You <br /> Should Know

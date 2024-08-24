@@ -9,7 +9,7 @@ const BodyPart = ({item, setBodyPart, bodyPart}) => {
         window.scrollTo({top:1800, left:100, behavior: 'smooth'})
       }}
       className={`flex flex-col items-center justify-center transform scale-100 transition-all duration-300 ease-in-out hover:scale-x-105 
-      ${bodyPart === item ? "border-t-8 border-[#ff2625]" : ""}
+      ${bodyPart === item ? "border-t-[0.3rem] border-[#ff2625]" : ""}
       bg-white rounded-b-lg  w-[14rem] h-[14.5rem] gap-12 `}
     >
       <img src={Icon} alt="icon logo" className="w-10 h-10" />
